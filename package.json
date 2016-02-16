@@ -1,6 +1,6 @@
 {
   "name": "nucleus-utils",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/dzuluaga/nucleus-utils#readme",
   "dependencies": {
-    "lodash": "^4.2.1"
+    "debug": "^2.2.0",
+    "lodash": "^4.2.1",
+    "pg": "^4.4.6",
+    "sequelize": "^3.19.2"
   }
 }
