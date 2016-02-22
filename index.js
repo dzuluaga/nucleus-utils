@@ -23,7 +23,7 @@ module.exports = function initializer( _options ){
     debug('initializing nucleus-utils');
     var config_all_envs = _options.config;
     var config = _options.config[getEnvironment()];
-    initDatabases( { configs : [ config.database, config.database_security ], all_config: config_all_envs } )
+    db_connections = initDatabases( { configs : [ config.database, config.database_security ], all_config: config_all_envs } );
     options = _options;
     module.exports = {
       getIncludes: getIncludes,
@@ -32,13 +32,13 @@ module.exports = function initializer( _options ){
       getEnvironment: getEnvironment,
       getLimit: getLimit,
       getConfig: getConfig,
-      initDatabases: initDatabases,
       db_connections: db_connections
     }
     return module.exports;
   } else if( options ){
     throw new Error('nucleus-utils already initialized.');
   }
+  return module.exports;
 }
 function findModel(models, includeAlias) {
   var _model;
@@ -92,6 +92,8 @@ function initDatabases(_options) {
       db_connections[config.name] = new Sequelize(config.database, config.username, config.password || process.env.nucleus_password, config);
       //var sequelize = new Sequelize(config.database, config.username, config.password || process.env.nucleus_password, config);
       db_connections[config.name]._all_config = _options.all_config;
+      db_connections.utils = this;
+      db_connections.Sequelize = Sequelize;
       db_connections[config.name].authenticate().then(function (errors) {
         if (errors) {
           console.log("nucleus ", config.name, "DB ", errors)
