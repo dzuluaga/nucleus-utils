@@ -89,6 +89,14 @@ function initDatabases(_options) {
       if (!config.name) {
         throw new Error('Name attribute is missing from database config entry. Check config.json file');
       }
+
+      //this is required to fix timestamp issues reproducible only from the server
+      var types = require('pg').types;
+      var timestampOID = 1114;
+      types.setTypeParser(1114, function(stringValue) {
+        return new Date( Date.parse(stringValue + "0000") );
+      });
+
       db_connections[config.name] = new Sequelize(config.database, config.username, config.password || process.env.nucleus_password, config);
       //var sequelize = new Sequelize(config.database, config.username, config.password || process.env.nucleus_password, config);
       db_connections[config.name]._all_config = _options.all_config;
